@@ -20,7 +20,7 @@
 
     <!-- 합쳐지고 최소화된 최신 자바스크립트 -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-    <title>Peeknchews - New way of look & choose</title>
+    <title>Hey Korean Interview</title>
 
     <!-- 부트스트랩 -->
     <link href="build/bootstrap/css/bootstrap-theme.css" rel="stylesheet">
@@ -52,9 +52,13 @@
       </div>
       <div class="col-lg-10">
         <?php 
-          $kind = $_GET['kind'];
+          if (isset($_GET['kind'])) {
+            $kind = $_GET['kind'];
+          }
+
           if ($kind == 1) {   // When tutee board opened
         ?>
+
 <!-- Start Tutee Board -->
         <h1>Tutee List(튜'티')</h1>
 
@@ -72,24 +76,24 @@
             </thead>
             <tbody> 
             <?php 
-              $sql1 = "SELECT * FROM tbl_tuteeBoard ORDER BY tutee_no DESC";
+              $sql1 = "SELECT * FROM tbl_board ORDER BY board_no DESC";
               $result1 = mysqli_query($conn, $sql1);
               while ($row1 = mysqli_fetch_assoc($result1)) {
-                $datetime = explode(' ', $row1['tutee_date']);
+                $datetime = explode(' ', $row1['board_date']);
                 $date = $datetime[0];
                 $time = $datetime[1];
                 if($date == Date('Y-m-d'))
-                  $row1['tutee_date'] = $time;
+                  $row1['board_date'] = $time;
                 else
-                  $row1['tutee_date'] = $date;
+                  $row1['board_date'] = $date;
             ?>
               <tr>
-                <td class="no" style="width: 10%;"> <center> <?php echo $row1['tutee_no']; ?> </center></td>
-                <td class="title" style="width: 40%;"> <center> <?php echo $row1['tutee_title']; ?> </center></td>
+                <td class="no" style="width: 10%;"> <center> <?php echo $row1['board_no']; ?> </center></td>
+                <td class="title" style="width: 40%;"> <center> <a href="biz_view.php?no=<?php echo $row1['board_no']; ?>&kind=1"> <?php echo $row1['board_title']; ?> </a> </center></td>
                 <td class="item" style="width: 10%;"> <center> <?php echo "꼼꼼한지도"; ?> </center></td>
-                <td class="email" style="width: 25%;"> <center> <?php echo $row1['tutee_email']; ?> </center></td>
-                <td class="date" style="width: 10%;"> <center> <?php echo $row1['tutee_date']; ?> </center></td>
-                <td class="view" style="width: 10%;"> <center> <?php echo $row1['tutee_view']; ?> </center></td>
+                <td class="email" style="width: 25%;"> <center> <?php echo $row1['board_email']; ?> </center></td>
+                <td class="date" style="width: 10%;"> <center> <?php echo $row1['board_date']; ?> </center></td>
+                <td class="view" style="width: 10%;"> <center> <?php echo $row1['board_view']; ?> </center></td>
               </tr>
             <?php 
               }
@@ -98,14 +102,20 @@
           </table>
         </article>
 <!-- End Tutee Board -->
+
         <?php
           }
           else if ($kind == 2) {    // When tutor board opened
         ?>
+
 <!-- Start Tutor Board -->
         <h1>Tutor List(튜'터')</h1>
 <!-- End Tutor Board -->
+
         <?php 
+          }
+          else {
+            echo "튜티/ 튜터 게시판을 선택하세요";   // undefined index($kind) point exception
           }
         ?>
       </div>
