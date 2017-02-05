@@ -91,10 +91,105 @@
               <?php echo $row1['board_text']; ?>
             </div>
              
-             <br><br>
-            <div>
-              <a href="#">Apply as a tutor</a>  
-            </div>
+            <br><br>
+            <?php  
+              if ($email == $row1['board_email']) {   // login user = board author
+                //  local variable board author
+                $board_email = $row1['board_email'];
+
+                //  Display 'confirm' OR 'candidates list'
+                $sql3 = "SELECT payment_end FROM tbl_payment WHERE payment_boardNo='$no' AND payment_from='$board_email'";
+                $result3 = mysqli_query($conn, $sql3);
+                $row3 = mysqli_fetch_assoc($result3);
+                $confirm = $row3['payment_end'];
+
+                if ($confirm == 0) {    //  list Display Confirm Button
+            ?>
+                  <div class="confirm">
+                    <a href="biz_confirm.php?kind=<?php echo $kind; ?>&boardNo=<?php echo $no; ?>&confirmFrom=<?php echo $row1['board_email']; ?>">Confirm</a>
+                  </div>
+            <?php 
+                }
+                else if ($confirm == 1) {   //  Display Complete
+                  echo "Complete Payment and Confirm.";
+                  break;
+            ?>
+
+            <?php 
+                }
+                else {   //  Display Candidates 
+            ?>
+                  <div class="candidates-list">
+                    <p><b>Candidates List</b></p> 
+
+                    <script type="text/javascript">
+                      function meetUpConfirm() { 
+                        var answer = confirm("Are you sure?");
+
+                        if (answer != 0) {  // Click yes
+                          return true;
+                        } 
+                        else {    // Click no
+                          meetUpForm.optionsRadios.focus();
+                          return false;
+                        }
+                      } 
+                    </script> 
+
+                    <?php 
+                      $sql2 = "SELECT * FROM heykorean.tbl_apply ";
+                      $sql2 .= "WHERE apply_boardNo = '$no'";
+                      $result2 = mysqli_query($conn, $sql2);
+                      while ($row2 = mysqli_fetch_assoc($result2)) {
+                    ?>
+                      <form name="meetUpForm" action='biz_meetUp.php?kind=<?php echo $kind;?>&boardNo=<?php echo $no;?>&applyTo=<?php echo $row1['board_email'];?>' method='post' onsubmit="return meetUpConfirm()"> 
+                        <div class="form-group">   
+                          <input type="radio" name="optionsRadios" id="optionsRadios1" value="<?php echo $row2['apply_from']; ?>">
+                          <a href="user_info.php?boardNo=<?php echo $no; ?>&applyFrom=<?php echo $row2['apply_from'];?>" target="_blank">
+                      <?php 
+                        echo $row2['apply_from'] . "<br>";
+                        }
+                      ?>
+                          </a>
+                        </div>   
+
+                        <button type="submit" name="submit" class="btn btn-default" id="meetUpButton">Meet Up</button>
+                      </form> 
+                  </div>
+            <?php 
+                }
+            ?>
+
+            <?php 
+              }
+              else {    // login user != board author
+            ?>
+
+              <div>
+                <a href="biz_apply.php?kind=<?php echo $kind;?>&boardNo=<?php echo $no;?>&applyFrom=<?php echo $email;?>&applyTo=<?php echo $row1['board_email'];?>">Apply as a tutor</a>   
+              </div>
+
+              <script type="text/javascript">
+                function checkAmount() {
+                  if(applyForm.amount.value == "") {
+                    alert("Please enter tuition.");
+                    applyForm.amount.focus();
+                    return false;
+                  }
+                }
+              </script>
+              <form name="applyForm" action='biz_apply.php?kind=<?php echo $kind;?>&boardNo=<?php echo $no;?>&applyFrom=<?php echo $email;?>&applyTo=<?php echo $row1['board_email'];?>' method='post' onsubmit="return checkAmount()"> 
+                <div class="form-group">  
+                  $ 
+                  <input style="width: 10%; position: relative; display: inline-block;" type="text" name="amount" class="form-control" id="amount" size="4" maxlength="10" placeholder="ex)100.00"> 
+                </div>   
+
+                <button type="submit" name="submit" class="btn btn-default" id="applyButton">Apply as a tutor</button>
+              </form>
+
+            <?php 
+              }
+            ?>
           </div>
          
         <?php
@@ -112,28 +207,3 @@
     ?>
   </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
