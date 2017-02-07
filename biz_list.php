@@ -56,7 +56,7 @@
             $kind = $_GET['kind'];
           }
 
-          if ($kind == 1) {   // When tutee board opened
+          if (isset($_GET['kind']) && $kind == 1) {   // When tutee board opened
         ?>
 
 <!-- Start Tutee Board -->
@@ -105,7 +105,7 @@
 
         <?php
           }
-          else if ($kind == 2) {    // When tutor board opened
+          else if (isset($_GET['kind']) && $kind == 2) {    // When tutor board opened
         ?>
 
 <!-- Start Tutor Board -->
@@ -130,28 +130,3 @@
     ?>
   </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
