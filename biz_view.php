@@ -94,30 +94,14 @@
             <br><br>
             <?php  
               if ($email == $row1['board_email']) {   // login user = board author
-                //  local variable board author
-                $board_email = $row1['board_email'];
 
                 //  Display 'confirm' OR 'candidates list'
-                $sql3 = "SELECT payment_end FROM tbl_payment WHERE payment_boardNo='$no' AND payment_from='$board_email'";
+                $sql3 = "SELECT payment_end FROM tbl_payment WHERE payment_boardNo='$no' AND payment_end='0';";
                 $result3 = mysqli_query($conn, $sql3);
                 $row3 = mysqli_fetch_assoc($result3);
                 $confirm = $row3['payment_end'];
 
-                if ($confirm == 0) {    //  list Display Confirm Button
-            ?>
-                  <div class="confirm">
-                    <a href="biz_confirm.php?kind=<?php echo $kind; ?>&boardNo=<?php echo $no; ?>&confirmFrom=<?php echo $row1['board_email']; ?>">Confirm</a>
-                  </div>
-            <?php 
-                }
-                else if ($confirm == 1) {   //  Display Complete
-                  echo "Complete Payment and Confirm.";
-                  break;
-            ?>
-
-            <?php 
-                }
-                else {   //  Display Candidates 
+                if ($confirm == "") {    //  Display Candidates list
             ?>
                   <div class="candidates-list">
                     <p><b>Candidates List</b></p> 
@@ -157,6 +141,16 @@
                       </form> 
                   </div>
             <?php 
+                }
+                else if ($confirm == 0) {   //  Display Confirm Button
+            ?>
+                  <div class="confirm">
+                    <a href="biz_confirm.php?kind=<?php echo $kind; ?>&boardNo=<?php echo $no; ?>&confirmFrom=<?php echo $row1['board_email']; ?>">Confirm</a>
+                  </div>
+            <?php 
+                }
+                else if ($confirm == 1) {   //  Display complete
+                  echo "Complete Payment and Confirm.";
                 }
             ?>
 
